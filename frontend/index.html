@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediFlow AI</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">✚</span> MediFlow <b>AI</b></div>
+    <div id="who" class="who"></div>
+  </header>
+
+  <main id="app">
+    <section id="login-view" class="card narrow">
+      <h1>Sign in</h1>
+      <p class="muted">Synthetic demo data only. Staff accounts require an MFA code.</p>
+      <form id="login-form" autocomplete="off">
+        <label>Username <input name="username" required maxlength="64"></label>
+        <label>Password <input name="password" type="password" required maxlength="128"></label>
+        <label id="totp-row" class="hidden">MFA code <input name="totp" inputmode="numeric" maxlength="8" placeholder="6-digit code"></label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+      <p class="muted small">New patient? <a href="#" id="show-signup">Register and get your patient ID</a></p>
+      <form id="signup-form" class="hidden" autocomplete="off">
+        <h2>Patient registration</h2>
+        <div class="grid2">
+          <label>Full name <input name="full_name" required maxlength="120"></label>
+          <label>Date of birth <input name="date_of_birth" type="date" required></label>
+          <label>Sex <select name="sex"><option>female</option><option>male</option><option>other</option><option>unknown</option></select></label>
+          <label>Language <select name="preferred_language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option></select></label>
+          <label>Phone <input name="phone" required placeholder="+919800000000"></label>
+          <label>Email <input name="email" type="email" required></label>
+          <label>Username <input name="username" required></label>
+          <label>Password <input name="password" type="password" required minlength="10"></label>
+        </div>
+        <label class="check"><input type="checkbox" name="whatsapp_opt_in"> Send me WhatsApp confirmations</label>
+        <button class="primary" type="submit">Create account</button>
+      </form>
+    </section>
+
+    <section id="main-view" class="hidden">
+      <nav id="tabs" class="tabs"></nav>
+      <div id="content"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

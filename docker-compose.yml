@@ -1,0 +1,41 @@
+# Optional: run the platform as containers (needs Docker). Still 100% local and free.
+#   docker compose up --build
+# Workers can be scaled by hand:  docker compose up --scale worker-notification=4
+x-app: &app
+  build: .
+  image: mediflow-ai:local
+  environment:
+    MEDIFLOW_DATA_DIR: /app/data
+    MEDIFLOW_IDENTITY_URL: http://identity:8000
+    MEDIFLOW_PATIENT_URL: http://patient:8000
+    MEDIFLOW_APPOINTMENT_URL: http://appointment:8000
+    MEDIFLOW_PRESCRIPTION_URL: http://prescription:8000
+    MEDIFLOW_BILLING_URL: http://billing:8000
+    MEDIFLOW_DOCUMENT_URL: http://document:8000
+    MEDIFLOW_AI_URL: http://ai:8000
+    MEDIFLOW_AUDIT_URL: http://audit:8000
+  volumes: [ "mediflow-data:/app/data" ]   # local bus/audit/blobs are SQLite + files on a shared volume
+
+x-svc: &svc
+  <<: *app
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready')"]
+    interval: 10s
+
+services:
+  gateway:      { <<: *svc, ports: ["8000:8000"] }
+  identity:     { <<: *svc, command: ["uvicorn", "mediflow.services.identity.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  patient:      { <<: *svc, command: ["uvicorn", "mediflow.services.patient.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  appointment:  { <<: *svc, command: ["uvicorn", "mediflow.services.appointment.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  prescription: { <<: *svc, command: ["uvicorn", "mediflow.services.prescription.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  billing:      { <<: *svc, command: ["uvicorn", "mediflow.services.billing.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  document:     { <<: *svc, command: ["uvicorn", "mediflow.services.document.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  ai:           { <<: *svc, command: ["uvicorn", "mediflow.services.ai.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  audit:        { <<: *svc, command: ["uvicorn", "mediflow.services.audit.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"] }
+  worker-notification: { <<: *app, command: ["python", "-m", "mediflow.workers.notification_worker"] }
+  worker-document:     { <<: *app, command: ["python", "-m", "mediflow.workers.document_worker"] }
+  worker-profile:      { <<: *app, command: ["python", "-m", "mediflow.workers.profile_worker"] }
+  worker-billing:      { <<: *app, command: ["python", "-m", "mediflow.workers.billing_worker"] }
+
+volumes:
+  mediflow-data:
