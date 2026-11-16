@@ -9,8 +9,15 @@ record. AI makes that record easier to read; Service Bus + autoscaled workers ke
 responsive under load.
 
 **Live demo (Azure App Service, Free tier):** https://mediflow-ai-458ce0.azurewebsites.net -
-patient login `asha` / `MediFlow#2026`. How it is deployed and how the Azure resources connect:
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). (The free tier sleeps when idle, so the first load can take ~30-60 s.)
+patient login `asha` / `MediFlow#2026`. (The free tier sleeps when idle, so the first load can take ~30-60 s.)
+
+| Document | What's inside |
+|---|---|
+| [docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md) | Full project details: problem, roles, modules, architecture, Azure services, security, testing, interview talking points |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Live Azure resources, settings, and how every component connects (demo + production) |
+| [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md) | Demo accounts and a 5-minute guided tour of the live site |
+| [docs/API.md](docs/API.md) | All 79 API endpoints by service |
+| [docs/SECURITY.md](docs/SECURITY.md) | STRIDE threat model and controls |
 
 > **Runs entirely locally at zero cost.** Every Azure dependency has a free local stand-in behind
 > the same interface, switched by one environment variable. The Azure production architecture is
